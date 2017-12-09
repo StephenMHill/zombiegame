@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Program Name: zombieGame.txt
+         Program Purpose: To practice code and kill zombies
+         Author: Stephen Hill	
+         Date Last Modified: 2017-12-08 -->
+
+    <title>Zombie Game</title>
+    <meta charset="utf-8" />
+
+    <h1>Introduction</h1>
+    <h2>The year is unknown. Some time ago a deadly viral outbreak swept across the world and devistated the human population. You are one of the few remaining survivors, and this is your story.</h2>
+    </head>
+    <body>
+    <script type="text/javascript">
+
+        // Declare constants (display)
+        var BR = "<br />";	// HTML line break
+        var PA = "<p />";	// HTML paragraph break
+        var ES = " ";		// empty space
+        var light = 1;
+        var medium = 2;
+        var heavy = 3;
+
+        // Declare numeric variables
+        var p1HP;               // health of player 1
+        var wepDamage;             // amount of damage
+        var z1HP;               // health of zombie 1
+        var z2HP;               // health of zombie 2
+        var numBullet;          // number of bullets in inventory
+        
+        
+        // Declare string variables
+        var playerClass;         // Players choosen class (Gunner, Duelist, Protector, Trickster)
+        var wepActive;        // Players active weapon
+        var wepInv1;          // Players first inventory weapon
+        var wepInv2;          // Players second inventory weapon
+        var player1;             // players name
+        var zombie1;             // Random zombie 1
+        var zombie2;             // random zomvie 2
+        var armorType;           // Type of armor (light, medium, Heavy)
+        var act1
+        var act2
+        var act3
+        
+       
+
+        // Ask for player information
+        player1 = prompt("Enter name of player: ",ES);
+        playerClass = prompt("Enter the class of player: *NOTE* Enter single letter only. g=Gunner, d=Duelist, p=Protector, and t=Trickster",ES);
+
+        if (playerClass == "g") 
+        {
+            document.write("You have choosen Gunner, how unoriginal of you. You will begin the game with a pistol, 6 bullets and light armor. As well, just like your unoriginal class choice, your movement is unoriginal too, thus you may move up to 10m per turn" + PA);
+            playerClass = "Gunner"
+            wepActive = "pistol";
+            armorType = light;
+            wepDamage = 3;
+            numBullet = 6;
+            spclAtk = "pistol whip";
+            spclDmg = 1;
+        }
+        else if (playerClass == "d") 
+        {
+            document.write("You have choosen Duelist, thats lit fam! You will begin the game with a handaxe and medium armor. The hand axe can be thrown up to 5m. As well, you may move up to 10m per turn" + PA);
+            playerClass = "Duelist"
+            wepActive = "handaxe";
+            armorType = medium;
+            wepDamage = 2;
+            spclAtk = "Throw Weapon";
+            spclDmg = 2;
+        }
+       else if (playerClass == "p") 
+        {
+            document.write("You have choosen Protector, what a noob! You will begin the game with a mace, a shield, and heavy armor. Your heavy armor slows your noob @$$, limiting you to a maximum of 5m of movement per turn" + PA);
+            playerClass = "Protector"
+            wepActive = "mace";
+            armorType = heavy;
+            wepDamage = 2;
+            spclAtk = "Shield Bash";
+            spclDmg = 1;
+            spclEft = "knock back 5m";
+        }
+       else if (playerClass == "t") 
+        {
+            document.write("You have choosen Trickster, what a badass you are! You will begin the game with three daggers, and light armor. As well your quick and nimble, thus you may move up to 15m per turn" + PA);
+            playerClass = "Trickster"
+            wepActive = "dagger";
+            armorType = light;
+            wepDamage = 1;
+            spclAtk = "Disengage and Throw Weapon";
+            spclDmg = 1;
+        }
+
+        // Program heading
+        document.write("Welcome to the apocalypse " + playerClass + ES + player1 + PA);
+
+        // Initiate variables
+        p1HP = (3 + armorType);
+        z1HP = 3;
+        z2HP = 3;
+        
+        // start of game
+        document.write("<h1>A zombie approaches! Get ready!</h1>" + PA);
+ 
+        act1 = prompt("Choose an action: *NOTE* Enter single letter only. m=melee(attack), r=ranged(attack) f=flee OR d=disengage" + ES);
+        
+        if (act1 == "m")
+            {
+                document.write(player1 + ES + "attacks first." + PA);
+                do
+                    {
+                    if (p1HP > 0 && playerClass != "Gunner")
+                        {
+                        document.write(player1 + "'s HP is" + ES + p1HP + BR);
+                        document.write("The zombie's current HP is" + ES + z1HP + PA);
+                        document.write(player1 + ES + "attacks with" + ES + wepActive + ES + "dealing" + ES + wepDamage + ES + "damage" + BR);
+                        z1HP = (z1HP - wepDamage);
+                        document.write("The zombie's HP is now" + ES + z1HP + PA);
+                        }
+                    else  if (playerClass == "Gunner")
+                        {
+                        document.write(player1 + "'s HP is" + ES + p1HP + BR);
+                        document.write("The zombie's current HP is" + ES + z1HP + PA);
+                        document.write(player1 + ES + "attacks with" + ES + spclAtk + ES + "dealing" + ES + spclDmg + ES + "damage" + BR);
+                        z1HP = (z1HP - spclDmg);
+                        document.write("The zombie's HP is now" + ES + z1HP + PA);
+                        }
+                    else 
+                        {
+                        document.write(player1 + " died");
+                        break;
+                        }
+                    if (z1HP > 0 && playerClass != "Protector")
+                        {
+                        document.write("The zombie attacks now, dealing 1 damage" + BR);
+                        p1HP = (p1HP - 1);
+                        document.write(player1 + "'s HP is now" + ES + p1HP + PA);
+                        }
+                    else if (z1HP <= 0)  
+                        {
+                        document.write("Zombie is Dead");
+                        break;
+                        }
+                    else if (playerClass == "Protector")
+                        {
+                            document.write(player1 + " uses shield to block zombies attack. No damage taken" + PA)
+                        }
+                    }
+                while (z1HP > 0);
+            }     
+        if (act1 == "r")
+            {
+                document.write(player1 + ES + "attacks first." + PA);
+                do
+                    {
+                    if (p1HP > 0)
+                        {
+                        document.write(player1 + "'s HP is" + ES + p1HP + BR);
+                        document.write("The zombie's current HP is" + ES + z1HP + PA);
+                        document.write(player1 + ES + "attacks with" + ES + wepActive + ES + "dealing" + ES + wepDamage + ES + "damage" + BR);
+                        z1HP = (z1HP - wepDamage);
+                        document.write("The zombie's HP is now" + ES + z1HP + PA);
+                            if (playerClass == "Gunner")
+                                {
+                                    numBullet = (numBullet - 1)
+                                    document.write(player1 + " is down to " + numBullet + " bullets.")
+                                }
+                        }
+                    else 
+                        {
+                        document.write(player1 + " died");
+                        break;
+                        }
+                    if (z1HP > 0)
+                        {
+                        document.write("The zombie moves in for an attack. <h2>Watch out!</h2>" + BR);
+                        }
+                    else 
+                        {
+                        document.write("Zombie is Dead");
+                        break;
+                        }
+                    }
+                while (z1HP > 0);
+            }   
+        if (act1 == "f")
+                {
+                    document.write("The zombie groans and moans as you run away like a little sissy" + PA);
+                }
+        if (act1 == "d")
+            {
+                document.write("You dash away out of the zombies reach, it moans and groans in annoyance, as if cursing you and the tactical advantage you have gained. Now would be a good time to use some sort of ranged attack, if you can." + PA);
+            }
+
+            while (z1HP > 0)
+            {
+            act2 = prompt("Choose your next action: *NOTE* Enter single letter only. m=melee(attack), r=ranged(attack) f=flee OR d=disengage" + ES);
+
+            if (act2 == "m")
+            {
+                document.write(player1 + ES + "attacks first." + PA);
+                do
+                    {
+                    if (p1HP > 0)
+                        {
+                        document.write(player1 + "'s HP is" + ES + p1HP + BR);
+                        document.write("The zombie's current HP is" + ES + z1HP + PA);
+                        document.write(player1 + ES + "attacks with" + ES + wepActive + ES + "dealing" + ES + wepDamage + ES + "damage" + BR);
+                        z1HP = (z1HP - wepDamage);
+                        document.write("The zombie's HP is now" + ES + z1HP + PA);
+                        }
+                    else 
+                        {
+                        document.write(player1 + " died");
+                        break;
+                        }
+                    if (z1HP > 0)
+                        {
+                        document.write("The zombie attacks now, dealing 1 damage" + BR);
+                        p1HP = (p1HP - 1);
+                        document.write(player1 + "'s HP is now" + ES + p1HP + PA);
+                        }
+                    else 
+                        {
+                        document.write("Zombie is Dead");
+                        }
+                    }
+                while (z1HP > 0);
+            }   
+            
+        if (act2 == "r")
+            {
+                document.write(player1 + ES + "attacks first." + PA);
+                do
+                    {
+                    if (p1HP > 0)
+                        {
+                        document.write(player1 + "'s HP is" + ES + p1HP + BR);
+                        document.write("The zombie's current HP is" + ES + z1HP + PA);
+                        document.write(player1 + ES + "attacks with" + ES + wepActive + ES + "dealing" + ES + wepDamage + ES + "damage" + BR);
+                        z1HP = (z1HP - wepDamage);
+                        document.write("The zombie's HP is now" + ES + z1HP + PA);
+                        }
+                    else 
+                        {
+                        document.write(player1 + " died");
+                        break;
+                        }
+                    if (z1HP > 0)
+                        {
+                        document.write("The zombie moves in for an attack. <h2>Watch out!</h2>" + BR);
+                        }
+                    else 
+                        {
+                        document.write("Zombie is Dead");
+                        }
+                    }
+                while (z1HP > 0);
+            }   
+        if (act2 == "f")
+                {
+                    document.write("The zombie groans and moans as you run away like a little sissy" + PA);
+                }
+        if (act2 == "d")
+            {
+                document.write("You dash away out of the zombies reach. It moans and groans in annoyance, as if cursing you and the tactical advantage you have gained. Now would be a good time to use some sort of ranged attack, if you can." + PA);
+            }
+            }
+    </script>   
+</body>
+</html>
