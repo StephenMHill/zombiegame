@@ -13,7 +13,6 @@
         <h2>The year is unknown. Some time ago a deadly viral outbreak swept across the world and devistated the human population. You are one of the few remaining survivors, and this is your story.</h2>
         
         <script type="text/javascript">
-            "use strict";
             // Declare constants (display)
             var BR = "<br />";	// HTML line break
             var PA = "<p />";	// HTML paragraph break
@@ -26,7 +25,7 @@
             var status;         // Used for function. TBD
 
             // Declare numeric variables
-            var pHP = 0;                // health of player 1
+            var pHP;                // health of player 1
             var zomNum = 0;             // Number of zombies present
             var amoPU = 0;              // Amount of ammunition picked up
             var zHP = 0;                // Zombie health points
@@ -71,9 +70,9 @@
                 else if (pCls == "Defender") 
                 {
                     document.characterForm1.fightScene.value = "You have choosen Defender, how noble of you. You will begin the game with a mace, a shield, and heavy armor. Your heavy armor slows your movement limiting you to a maximum of 5m of movement per turn. Welcome to the apocalypse " + pCls + ES + player;
-                    wepA = "mace";
+                    wepA = "club";
                     armT = heavy + shield;
-                    wepD = 2;
+                    wepD = 1;
                     // spclAtk = "Shield Bash";
                     // spclDmg = 1;
                     // spclEft = "knock back 5m";
@@ -119,7 +118,7 @@
 			{
                 if (zombies.length == 1)
                 {
-                    document.getElementById("combatArea").innerHTML += "<div>" + player + "'s current HP is" + ES + pHP + " and the zombie's current HP is 2" + ES + "</div>";
+                    document.getElementById("combatArea").innerHTML += "<div>" + player + "'s current HP is" + ES + pHP + " and the zombie's current HP is " + zombies[0] + ES + "</div>";
                 }
                 else if (zombies.length > 1)
                 {
@@ -162,6 +161,13 @@
                     return n;
                 }
             }
+
+            function eXp()
+            {
+                
+            }
+
+            function 
 			
 
 			
@@ -178,13 +184,14 @@
                         if (zombies[0] <= 0)
                         {
                             document.getElementById("combatArea").innerHTML += "<div> " + "A zombie has died" + "</div>";
+                            document.getElementById("combatArea").innerHTML += "<div> " + "" + "</div>";
                             pHP -= zAtk(zombies.length - 1);
                         }
                         else 
                         {
                             pHP -= zAtk(zombies.length);
                         }
-					} 
+					}
                     while (zombies[0] > 0 && pHP > 0);
 
 					if (pHP <= 0) 
@@ -192,9 +199,9 @@
 						document.getElementById("combatArea").innerHTML +=  "<div> " + player + " is dead." + "</div>";
 						break;
 					}
-					zombies.shift(); // removes first element of zombie array
-					
+					zombies.shift(); // removes first element of zombie array	
 				}
+                pHP = 3 + armT
 			}
 
 		</script>
