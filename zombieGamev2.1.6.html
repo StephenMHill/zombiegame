@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Program Name: zombieGamev2.1.6.txt
+            Program Purpose: To practice code and kill zombies
+            Author: Stephen Hill	
+            Date Last Modified: 2017-12-16 -->
+
+        <title>Zombie Game V2.1.6</title>
+        <meta charset="utf-8" />
+        <link href="https://fonts.googleapis.com/css?family=Creepster|Jim+Nightshade|Sancreek" rel="stylesheet"/>
+        <link href="zombie_styles.css" rel="stylesheet"/>
+
+        <h1 id=intro>The year is unknown. Some time ago a deadly viral outbreak swept across the world and devistated the human race. You are one of the few remaining survivors, and this is your story.</h1>
+        
+        <script type="text/javascript">
+            "use strict";
+            // Declare constants (display)
+            var BR = "<br />";	// HTML line break
+            var PA = "<p />";	// HTML paragraph break
+            var ES = " ";		// empty space
+            var armT = "";           // Armor Type
+            var light = 3;      // Armor Value. light armor = 1 HP
+            var medium = 5;     // Armor Value. medium armor = 2 HP
+            var heavy = 7;      // Armor Value. heavy armor = 23HP
+			var shield = 2;		// Armor Value. sheild = 1 HP
+            var status;         // Used for function. TBD
+
+            // Declare numeric variables
+            var pHP;                // health of player 1
+            var zomNum = 0;             // Number of zombies present
+            var amoPU = 0;              // Amount of ammunition picked up
+            var zHP = 0;                // Zombie health points
+            var zAD = 0;                // Zombie attack damage
+            var wepD = 0;               // Weapon Damage
+            var pCls = "";               // Player Class (Gunner, Slicer, Defender, Trickster)
+			var eXp;					// experiance points gained
+			var lVl = 1;				// character level
+			var totExp;             // total experiance points gained
+			
+            // Declare string variables
+            var player ="";             // players name
+            var act1;               // first action of the turn
+            var act2;               // second action of the turn    
+            var act3;               // thrid action of the turn
+            var wepA;               // Active Weapon
+			var zombies;			// used for the zombie spawn function and array
+			var holdExp;            // 
+
+            // Declare Functions
+            
+            // Function used to assign player name and player class as well as set up player class related strings
+            function gunner()
+            {
+                player = document.characterForm1.Name.value;
+                pCls = "Gunner"
+                document.getElementById("welcome").innerHTML = "<div>" + "You have choosen Gunner, thats lit fam! You will begin the game at level " + lVl + ". Your starting weapon is a pistol, and your armor type is light. As well, you may move up to 10m per turn. Welcome to the apocalypse " + pCls + ES + player + "</div>" + PA;
+                wepA = "pistol";
+                armT = light;
+                wepD = 3;
+                // numBullet = 6;
+                // spclAtk = "pistol whip";
+                // spclDmg = 1;
+                pHP = 3 + armT;
+				hide();
+            }
+
+            function slasher()
+            {
+                player = document.characterForm1.Name.value;
+                pCls = "Slasher"
+                document.getElementById("welcome").innerHTML = "<div>" + "You have choosen Slasher, classic choice my friend. You will begin the game at level " + lVl + ". Your starting weapon is a handaxe, and your armor type is medium. The hand axe can be thrown up to 5m. As well, you may move up to 10m per turn. Welcome to the apocalypse " + pCls + ES + player + "</div>" + PA;
+                wepA = "handaxe";
+                armT = medium;
+                wepD = 2;
+                // pclAtk = "Throw Weapon";
+                // spclDmg = 2;
+                pHP = 3 + armT;
+				hide();
+            }
+           
+           function defender()
+            {
+                player = document.characterForm1.Name.value;
+                pCls = "Defender"
+                document.getElementById("welcome").innerHTML = "<div>" + "You have choosen Defender, how noble of you. You will begin the game at level " + lVl + ". Your starting weapon is a club, your armor type is heavy, and you also begin equiped with a shield, however, your heavy armor slows your movement limiting you to a maximum of 5m of movement per turn. Welcome to the apocalypse " + pCls + ES + player + "</div>" + PA;
+                wepA = "mace";
+                armT = heavy + shield;
+                wepD = 2;
+                // spclAtk = "Shield Bash";
+                // spclDmg = 1;
+                // spclEft = "knock back 5m";
+                pHP = 3 + armT;
+				hide();
+            }
+            
+            function trickster()
+            {
+                player = document.characterForm1.Name.value;
+                pCls = "Trickster"
+                document.getElementById("welcome").innerHTML = "<div>" + "You have choosen Trickster, what a badass! You will begin the game at level " + lVl + ". Your starting weapons are set of throwing knives. Instead of armor your maximum movement is 15m (instead of 10), and you are equipped with various traps. Welcome to the apocalypse " + pCls + ES + player + "</div>" + PA;
+                wepA = "dagger";
+                armT = light;
+                wepD = 1;
+                pHP = 3 + armT;
+				hide();
+            }
+
+            // function used for setting up different difficulty levels
+            
+			function zomQty()
+            {
+                zomNum = document.difForm.difficulty.value;
+                zomNum = parseFloat(zomNum);
+                // zomNum decreases as zhp decreases
+                zHP = 3 * zomNum;
+                zAD = 1 * (zHP / zomNum);
+                
+            }
+			
+			function zomSpawn()
+			{
+				var res = []
+				zomNum = document.difForm.difficulty.value;
+                zomNum = parseFloat(zomNum);
+				
+				for (var i = 0; i < zomNum; i++)
+				{ 
+					res.push(2);
+				}
+				return res;
+			}
+			
+			// HP Status function
+			function hPS()
+			{
+                if (zombies.length == 1)
+                {
+                    document.getElementById("combatArea").innerHTML += "<div>" + player + "'s current HP is" + ES + pHP + " and the zombie's current HP is " + zombies[0] + ES + "</div>";
+                }
+                else if (zombies.length > 1)
+                {
+                    document.getElementById("combatArea").innerHTML += "<div>" + player + "'s current HP is" + ES + pHP + " and the " + zombies.length + " zombies current HP are each 2" + ES + "</div>";
+                }
+			}
+
+            // function used to hide second form
+            function hide() 
+            {
+                var x = document.getElementById("form");
+                if (x.style.display == "block") 
+                {
+                    x.style.display = "none";
+                } 
+                else 
+                {
+                    x.style.display = "block";
+                }
+            }
+			
+			// pAtk = player attack
+			function pAtk()
+			{
+				document.getElementById("combatArea").innerHTML += "<div> " + player + " attacks with " + wepA + " dealing " + wepD + " damage." + "</div>";
+				return wepD;
+			}
+			
+			// zAtk = zombie attack
+            function zAtk(n)
+        	{
+                if (n == 1)
+                { 
+                    document.getElementById("combatArea").innerHTML += "<div>" + n + " zombie attacks " + player + " for " + n + " damage." + "</div>";
+                    return n;
+                }
+                else if (n > 1)
+                {
+                    document.getElementById("combatArea").innerHTML += "<div>" + n + " zombies attack " + player + " for " + n + " damage." + "</div>";
+                    return n;
+                }
+				else
+				{
+					return 0;
+				}
+            }
+
+            function exp()
+            {
+                eXp = zombies.length * 10;
+				if (eXp < 50)
+					{
+						holdExp = eXp;
+					}
+				totExp = eXp + holdExp;
+				lVl = totExp / 25;
+                lVl = parseInt(lVl);
+				Math.floor(lVl);
+                document.getElementById("combatArea").innerHTML += "<div>" + player + " gains " + eXp + " experiance." + "<div>";
+				
+				if (lVl >= 2)
+				{
+					document.getElementById("combatArea").innerHTML += "<div>" + player + " is now level " + lVl + "<div>";
+				}
+            }
+			
+
+			
+			// function used to chain previous functions into single combat text
+			function combat()
+			{
+				zombies = zomSpawn();
+				while (zombies.length > 0) 
+                {
+					do 
+                    {
+						hPS();
+						zombies[0] -= pAtk();
+                        if (zombies[0] <= 0)
+                        {
+                            document.getElementById("combatArea").innerHTML += "<div> " + "A zombie has died" + "</div>" + PA;
+                            document.getElementById("combatArea").innerHTML += "<div> " + "" + "</div>";
+                            pHP -= zAtk(zombies.length - 1);
+                        }
+                        else 
+                        {
+                            pHP -= zAtk(zombies.length);
+                        }
+					} 
+                    while (zombies[0] > 0 && pHP > 0);
+
+					if (pHP <= 0) 
+                    {
+						document.getElementById("combatArea").innerHTML +=  "<div> " + player + " is dead." + "</div>";
+						break;
+					}
+					zombies.shift(); // removes first element of zombie array	
+				}
+			}
+
+		</script>
+    </head>
+	
+	<body>
+		
+		<form id="charform" name="characterForm1" action="">
+			<input id="entername" type="text" name="Name" placeholder="TYPE YOUR NAME HERE" value="" size="40">
+			<p id="chochochooseyou">Choose a class</p>
+			<input id="button" type="button" name="Class" value="Gunner" onclick="gunner()"><br/>
+			<input id="button" type="button" name="Class" value="Slasher" onclick="slasher()"><br/>
+			<input id="button" type="button" name="Class" value="Defender"onclick="defender()"><br/>
+			<input id="button" type="button" name="Class" value="Trickster" onclick="trickster()"><br/>
+		</form>
+        <div id="welcome"></div>
+		<div id="form" style="display:none;">
+    		<form id="difficulty" name="difForm" action="">
+                <p id="chodif">Choose a difficulty</p>
+                <input id="difficulty" type="radio" name="difficulty" value="1">Very Easy (Recomended level: 1)<br/>
+				<input id="difficulty" type="radio" name="difficulty" value="2">Easy (Recomended level: 1)<br/>
+				<input id="difficulty" type="radio" name="difficulty" value="3">Medium (Recomended level: 2)<br/>
+                <input id="difficulty" type="radio" name="difficulty" value="4">Hard (Recomended level: 3)<br/>
+                <input id="difficulty" type="radio" name="difficulty" value="5">Very Hard (Recomended level: 4)<br/>                
+				<!-- <input type="button" name="initChal" value="Initiate Difficulty" onclick="combat()"/><br/> -->
+				<input id="batzom" type="button" name="fightZombies" value="BATTLE ZOMBIES" onclick="combat()"/><p/>
+			</form>
+        </div>
+		<div id="combatArea"></div>
+
+		
+		
+		
+		
+		
+		
+		
+    </body>
+    </html>
